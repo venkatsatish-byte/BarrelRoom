@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Booking {{ booking.reference }}{% endblock %}
+{% block content %}
+{% with slot=booking.slot experience=booking.slot.experience %}
+<section class="card narrow">
+  {% if booking.status == "cancelled" %}
+    <span class="pill pill-muted">Cancelled</span>
+  {% else %}
+    <span class="pill">Confirmed</span>
+  {% endif %}
+  <h1>{{ experience.name }}</h1>
+  <dl class="details">
+    <dt>Winery</dt><dd><a href="{{ experience.winery.get_absolute_url }}">{{ experience.winery.name }}</a></dd>
+    <dt>When</dt><dd>{{ slot.start|date:"l, F j, Y" }} at {{ slot.start|time:"g:i A" }}</dd>
+    {% if experience.winery.address %}<dt>Where</dt><dd>{{ experience.winery.address }}</dd>{% endif %}
+    <dt>Guests</dt><dd>{{ booking.party_size }}</dd>
+    <dt>Total</dt><dd>${{ booking.total_price }} (paid at the winery)</dd>
+    <dt>Reference</dt><dd><code>{{ booking.reference }}</code></dd>
+  </dl>
+  <p class="muted">Keep this page's link — it's how you view or cancel your booking.</p>
+  {% if booking.can_cancel %}
+    <form method="post" action="{% url 'booking_cancel' booking.reference %}" onsubmit="return confirm('Cancel this booking?')">
+      {% csrf_token %}
+      <button class="button danger" type="submit">Cancel booking</button>
+    </form>
+  {% endif %}
+</section>
+{% endwith %}
+{% endblock %}

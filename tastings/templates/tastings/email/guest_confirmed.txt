@@ -1,0 +1,16 @@
+{% autoescape off %}Hi {{ booking.guest_name }},
+
+You're booked for {{ slot.experience.name }} at {{ winery.name }}.
+
+When:      {{ slot.start|date:"l, F j, Y" }} at {{ slot.start|time:"g:i A" }}
+Guests:    {{ booking.party_size }}
+Total:     ${{ booking.total_price }} (paid at the winery)
+Reference: {{ booking.reference }}
+{% if winery.address %}Where:     {{ winery.address }}
+{% endif %}
+View or cancel your booking: {{ booking_url }}
+{% if winery.phone %}Questions? Call {{ winery.name }} at {{ winery.phone }}.{% endif %}
+
+Cheers,
+BarrelRoom
+{% endautoescape %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · {{ winery.name }}{% endblock %}
+{% block content %}
+<div class="dash-head">
+  <div>
+    <h1>{{ winery.name }}</h1>
+    <p class="muted">Your booking page: <a href="{{ booking_url }}">{{ booking_url }}</a></p>
+  </div>
+  <a class="button secondary" href="{% url 'winery_edit' %}">Edit winery</a>
+</div>
+
+<section class="stats">
+  <div class="card stat"><span>{{ today|length }}</span>bookings today</div>
+  <div class="card stat"><span>{{ guests_today }}</span>guests today</div>
+  <div class="card stat"><span>{{ upcoming|length }}</span>upcoming bookings</div>
+</section>
+
+<h2>Experiences</h2>
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Name</th><th>Price</th><th>Capacity</th><th>Future slots</th><th></th></tr></thead>
+  <tbody>
+  {% for exp in experiences %}
+    <tr>
+      <td>{{ exp.name }}{% if not exp.is_active %} <span class="pill pill-muted">Hidden</span>{% endif %}</td>
+      <td>${{ exp.price_per_guest }}</td>
+      <td>{{ exp.capacity }}</td>
+      <td>{{ exp.future_slots }}</td>
+      <td class="actions"><a href="{% url 'experience_slots' exp.pk %}">Times</a> · <a href="{% url 'experience_edit' exp.pk %}">Edit</a></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5" class="muted">No experiences yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+<p><a class="button" href="{% url 'experience_create' %}">+ Add experience</a></p>
+
+<h2>Upcoming bookings</h2>
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>When</th><th>Experience</th><th>Guest</th><th>Party</th><th>Notes</th><th></th></tr></thead>
+  <tbody>
+  {% for b in upcoming %}
+    <tr>
+      <td>{{ b.slot.start|date:"D M j" }}, {{ b.slot.start|time:"g:i A" }}</td>
+      <td>{{ b.slot.experience.name }}</td>
+      <td>{{ b.guest_name }}<br><small class="muted">{{ b.guest_email }}{% if b.guest_phone %} · {{ b.guest_phone }}{% endif %}</small></td>
+      <td>{{ b.party_size }}</td>
+      <td><small>{{ b.notes }}</small></td>
+      <td class="actions">
+        {% if b.can_cancel %}
+        <form method="post" action="{% url 'dashboard_booking_cancel' b.pk %}" onsubmit="return confirm('Cancel {{ b.guest_name|escapejs }}’s booking and email them?')">
+          {% csrf_token %}<button class="link danger-text">Cancel</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6" class="muted">No upcoming bookings yet — share your booking page link.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

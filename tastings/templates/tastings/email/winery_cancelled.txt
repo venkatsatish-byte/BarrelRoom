@@ -1,0 +1,7 @@
+{% autoescape off %}Booking {{ booking.reference }} was cancelled.
+
+{{ booking.guest_name }}, party of {{ booking.party_size }}
+{{ slot.experience.name }} — {{ slot.start|date:"l, F j" }} at {{ slot.start|time:"g:i A" }}
+
+This slot now has {{ slot.seats_left }} of {{ slot.capacity }} seats left.
+{% endautoescape %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}List your winery · BarrelRoom{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>List your winery</h1>
+  <p class="muted">Take tasting bookings online in a few minutes. No more phone tag.</p>
+  <form method="post">
+    {% csrf_token %}
+    {% include "tastings/_form_fields.html" %}
+    <button class="button" type="submit">Create account</button>
+  </form>
+</section>
+{% endblock %}

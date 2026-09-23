@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Book {{ experience.name }}{% endblock %}
+{% block content %}
+<p><a href="{{ experience.get_absolute_url }}">← Other times</a></p>
+<section class="card narrow">
+  <h1>{{ experience.name }}</h1>
+  <p class="muted">{{ experience.winery.name }} · {{ slot.start|date:"l, F j" }} at {{ slot.start|time:"g:i A" }}</p>
+  <p>${{ experience.price_per_guest }} per guest, paid at the winery · {{ slot.seats_left }} seat{{ slot.seats_left|pluralize }} left</p>
+  <form method="post">
+    {% csrf_token %}
+    {% include "tastings/_form_fields.html" %}
+    <button class="button" type="submit">Confirm booking</button>
+  </form>
+</section>
+{% endblock %}

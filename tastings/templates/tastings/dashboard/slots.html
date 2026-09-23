@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Times · {{ experience.name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'dashboard' %}">← Dashboard</a></p>
+<h1>{{ experience.name }} — times</h1>
+
+<div class="two-col">
+  <section class="card">
+    <h2>Add times</h2>
+    <p class="muted">Creates a slot at each start time on the chosen days. Existing slots are kept.</p>
+    <form method="post">
+      {% csrf_token %}
+      {% include "tastings/_form_fields.html" %}
+      <button class="button" type="submit">Add times</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Upcoming times</h2>
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>When</th><th>Booked</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      {% for slot in slots %}
+        <tr>
+          <td>{{ slot.start|date:"D M j" }}, {{ slot.start|time:"g:i A" }}</td>
+          <td>{{ slot.booked|default:0 }} / {{ slot.capacity }}</td>
+          <td>{% if slot.is_closed %}<span class="pill pill-muted">Closed</span>{% else %}<span class="pill">Open</span>{% endif %}</td>
+          <td class="actions">
+            <form method="post" action="{% url 'slot_toggle' slot.pk %}">{% csrf_token %}
+              <button class="link">{% if slot.is_closed %}Reopen{% else %}Close{% endif %}</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">No upcoming times. Add some on the left.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </section>
+</div>
+{% endblock %}

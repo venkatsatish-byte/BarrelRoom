@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ experience.name }} · {{ winery.name }}{% endblock %}
+{% block content %}
+<p><a href="{{ winery.get_absolute_url }}">← {{ winery.name }}</a></p>
+<section class="card">
+  <h1>{{ experience.name }}</h1>
+  {% if experience.description %}<p>{{ experience.description|linebreaksbr }}</p>{% endif %}
+  <p><strong>${{ experience.price_per_guest }}</strong> per guest · {{ experience.duration_minutes }} minutes · up to {{ experience.max_party_size }} per booking</p>
+</section>
+
+<h2>Pick a time</h2>
+{% for day, slots in days.items %}
+  <div class="day">
+    <h3>{{ day|date:"l, F j" }}</h3>
+    <div class="slots">
+      {% for slot in slots %}
+        {% if slot.left %}
+          <a class="slot" href="{% url 'book' slot.pk %}">{{ slot.start|time:"g:i A" }}<small>{{ slot.left }} left</small></a>
+        {% else %}
+          <span class="slot full">{{ slot.start|time:"g:i A" }}<small>Full</small></span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% empty %}
+  <p class="muted">No open times in the next two months. Contact {{ winery.name }}{% if winery.phone %} at {{ winery.phone }}{% endif %}.</p>
+{% endfor %}
+{% endblock %}

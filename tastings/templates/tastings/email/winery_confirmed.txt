@@ -1,0 +1,12 @@
+{% autoescape off %}New booking for {{ slot.experience.name }}
+
+When:      {{ slot.start|date:"l, F j, Y" }} at {{ slot.start|time:"g:i A" }}
+Guest:     {{ booking.guest_name }}
+Email:     {{ booking.guest_email }}
+Phone:     {{ booking.guest_phone|default:"—" }}
+Party:     {{ booking.party_size }}
+Notes:     {{ booking.notes|default:"—" }}
+Reference: {{ booking.reference }}
+
+This slot now has {{ slot.seats_left }} of {{ slot.capacity }} seats left.
+{% endautoescape %}

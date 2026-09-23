@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ winery.name }} · BarrelRoom{% endblock %}
+{% block content %}
+<section class="card">
+  <span class="pill">{{ winery.region }}</span>
+  <h1>{{ winery.name }}</h1>
+  {% if winery.description %}<p>{{ winery.description|linebreaksbr }}</p>{% endif %}
+  <p class="muted">
+    {% if winery.address %}{{ winery.address }}{% endif %}
+    {% if winery.phone %} · {{ winery.phone }}{% endif %}
+    {% if winery.website %} · <a href="{{ winery.website }}" rel="noopener">Website</a>{% endif %}
+  </p>
+</section>
+
+<h2>Tastings &amp; tours</h2>
+<section class="grid">
+  {% for exp in experiences %}
+    <a class="card" href="{{ exp.get_absolute_url }}">
+      <h3>{{ exp.name }}</h3>
+      <p class="muted">{{ exp.description|truncatewords:30 }}</p>
+      <p><strong>${{ exp.price_per_guest }}</strong> per guest · {{ exp.duration_minutes }} min</p>
+      <span class="link-text">See times →</span>
+    </a>
+  {% empty %}
+    <p class="muted">No experiences are open for booking right now.</p>
+  {% endfor %}
+</section>
+{% endblock %}

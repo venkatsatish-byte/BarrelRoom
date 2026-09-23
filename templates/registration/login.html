@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Winery login · BarrelRoom{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>Winery login</h1>
+  <form method="post">
+    {% csrf_token %}
+    {% include "tastings/_form_fields.html" %}
+    <button class="button" type="submit">Log in</button>
+  </form>
+  <p class="muted">New here? <a href="{% url 'signup' %}">List your winery</a>.</p>
+</section>
+{% endblock %}

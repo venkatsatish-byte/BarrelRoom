@@ -1,0 +1,7 @@
+{% autoescape off %}Hi {{ booking.guest_name }},
+
+Your booking {{ booking.reference }} for {{ slot.experience.name }} at {{ winery.name }} on {{ slot.start|date:"l, F j" }} at {{ slot.start|time:"g:i A" }} has been cancelled.
+
+We hope to see you another time.
+BarrelRoom
+{% endautoescape %}

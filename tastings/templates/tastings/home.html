@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Book a winery tasting</h1>
+  <p>Find tastings and tours at small wineries, and book your seat in under a minute.</p>
+  {% if regions %}
+  <form method="get" class="region-filter">
+    <select name="region" onchange="this.form.submit()">
+      <option value="">All regions</option>
+      {% for r in regions %}<option value="{{ r }}"{% if r|lower == selected_region|lower %} selected{% endif %}>{{ r }}</option>{% endfor %}
+    </select>
+    <noscript><button class="button small">Filter</button></noscript>
+  </form>
+  {% endif %}
+</section>
+
+<section class="grid">
+  {% for winery in wineries %}
+    <a class="card winery-card" href="{{ winery.get_absolute_url }}">
+      <span class="pill">{{ winery.region }}</span>
+      <h2>{{ winery.name }}</h2>
+      <p class="muted">{{ winery.description|truncatewords:25 }}</p>
+      <span class="link-text">{{ winery.active_experiences }} experience{{ winery.active_experiences|pluralize }} →</span>
+    </a>
+  {% empty %}
+    <p class="muted">No wineries are taking bookings{% if selected_region %} in {{ selected_region }}{% endif %} yet.</p>
+  {% endfor %}
+</section>
+{% endblock %}
